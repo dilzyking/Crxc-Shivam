@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>𝗗𝗜𝗟𝗟𝗭𝗬</title>
+
+<style>
+body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:#e9eef3;
+    display:flex;
+    justify-content:center;
+    padding:12px;
+}
+.container{
+    width:100%;
+    max-width:480px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+.card{
+    background:linear-gradient(135deg,#0d6efd,#0a58ca);
+    border-radius:14px;
+    padding:18px;
+    color:#fff;
+    text-align:center;
+    box-shadow:0 6px 18px rgba(0,0,0,0.15);
+}
+.header{
+    font-size:22px;
+    font-weight:700;
+}
+.video-wrapper{
+    background:#000;
+    border-radius:14px;
+    overflow:hidden;
+    position:relative;
+    padding-top:56.25%;
+    box-shadow: 0 0 0 3px #0d6efd;
+    margin-bottom: 30px;
+}
+.video-wrapper iframe{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    border:0;
+}
+.error-box{
+    display:none;
+    background:#ff4d4d;
+    color:#fff;
+    padding:14px;
+    border-radius:10px;
+    font-weight:500;
+}
+.community h3{
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+}
+.buttons{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+}
+.btn{
+    flex:1;
+    background:transparent;
+    border:2px solid #fff;
+    border-radius:30px;
+    padding:10px;
+    color:#fff;
+    font-weight:600;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:.3s;
+}
+.btn:hover{
+    background:#fff;
+    color:#0d6efd;
+}
+.btn svg{
+    width:18px;
+    height:18px;
+    fill:currentColor;
+}
+.share-btn{
+    background:#fff;
+    color:#0d6efd;
+    border:none;
+    border-radius:10px;
+    padding:12px;
+    font-weight:700;
+    cursor:pointer;
+    width:100%;
+}
+
+/* Overlay Backdrop - semi transparent */
+.popup-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: none;
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modern Telegram Popup - SMALLER VERSION (reduced size, compact padding) */
+.telegram-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    backdrop-filter: blur(25px);
+    border: 1.5px solid rgba(13, 110, 253, 0.2);
+    padding: 1.2rem 1.2rem;
+    border-radius: 24px;
+    z-index: 10000;
+    text-align: center;
+    width: 80%;
+    max-width: 290px;
+    display: none;
+    box-shadow: 0 20px 40px -12px rgba(13, 110, 253, 0.25), 
+                0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.telegram-popup h2 {
+    color: #1e293b;
+    font-size: 1.2rem;
+    margin: 0 0 0.4rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+.telegram-popup .fa-telegram {
+    color: #2AABEE;
+    font-size: 1.2rem;
+}
+
+.telegram-popup p {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin: 0 0 0.9rem 0;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.telegram-popup .popup-button {
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 0.45rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.telegram-popup .join-btn {
+    background: linear-gradient(135deg, #2AABEE 0%, #1e98d4 100%);
+    color: white;
+    box-shadow: 0 4px 14px rgba(42, 171, 238, 0.3);
+    margin-top: 0.5rem;
+}
+
+.telegram-popup .join-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(42, 171, 238, 0.4);
+}
+
+.telegram-popup .join-btn:active {
+    transform: translateY(-1px);
+}
+
+.telegram-popup .joined-btn {
+    background: rgba(42, 171, 238, 0.08);
+    color: #2AABEE;
+    border: 1.5px solid rgba(42, 171, 238, 0.2);
+    margin-top: 0.5rem;
+}
+
+.telegram-popup .joined-btn:hover {
+    background: rgba(42, 171, 238, 0.12);
+    border-color: rgba(42, 171, 238, 0.3);
+}
+
+.telegram-popup .joined-btn:active {
+    background: rgba(42, 171, 238, 0.15);
+}
+</style>
+<!-- Font Awesome for Telegram icon only (lightweight) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+<div class="popup-backdrop" id="popupBackdrop"></div>
+<div class="telegram-popup" id="telegramPopup">
+    <h2><i class="fab fa-telegram"></i> Join The Action</h2>
+    <p>Get instant updates, match highlights & exclusive links</p>
+    <a href="https://t.me/+0QNGh0d6sPkzMmY1" target="_blank" rel="noopener noreferrer" class="popup-button join-btn" id="fixedJoinBtn">Join Channel Now</a>
+    <button class="popup-button joined-btn" onclick="closePopupModal();">I've Already Joined</button>
+</div>
+
+<div class="container">
+
+<div class="card header">
+CRXC
+</div>
+
+<div class="video-wrapper">
+    <div id="player-container"></div>
+</div>
+
+<div id="errorBox" class="error-box">
+Invalid or unavailable stream ID.
+</div>
+
+<div class="card community">
+<h3>
+Join our community for live updates!
+</h3>
+
+<div class="buttons">
+<a href="https://t.me/+0QNGh0d6sPkzMmY1" class="btn">
+<svg viewBox="0 0 24 24">
+<path d="M9.04 15.47l-.4 5.65c.57 0 .82-.25 1.13-.55l2.72-2.6 5.64 4.13c1.03.57 1.76.27 2.04-.95l3.7-17.37c.36-1.65-.6-2.3-1.6-1.92L1.66 9.74c-1.58.61-1.55 1.5-.27 1.9l5.58 1.74L19.46 5.6c.58-.36 1.1-.16.67.2"/>
+</svg>
+Telegram
+</a>
+</div>
+</div>
+
+<div class="card">
+<h3>Copy Link & Open In Chrome Browser Only</h3>
+<button class="share-btn" id="shareBtn">Share This Page Link</button>
+</div>
+
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded",function(){
+
+// GET ID PARAM
+const params=new URLSearchParams(window.location.search);
+const id=params.get("id");
+
+const playerContainer=document.getElementById("player-container");
+const errorBox=document.getElementById("errorBox");
+
+if(!id){
+    errorBox.style.display="block";
+    return;
+}
+
+// FETCH JSON
+fetch("https://allrounderid2.pages.dev/id.json")
+.then(res=>res.json())
+.then(data=>{
+
+if(!data.iframes || !Array.isArray(data.iframes)){
+    errorBox.style.display="block";
+    return;
+}
+
+const match=data.iframes.find(item=>item.id===id);
+
+if(match && match.iframeSrc){
+    playerContainer.innerHTML=`
+        <iframe 
+            src="${match.iframeSrc}" 
+            allow="encrypted-media; autoplay" 
+            allowfullscreen>
+        </iframe>
+    `;
+}else{
+    errorBox.style.display="block";
+}
+
+})
+.catch(()=>{
+errorBox.style.display="block";
+});
+
+document.getElementById("shareBtn").onclick=function(){
+navigator.clipboard.writeText(window.location.href)
+.then(()=>alert("Link Copied"));
+};
+
+});
+
+// Show popup after delay (unchanged behavior, but popup size is now smaller)
+setTimeout(() => {
+    const popup = document.getElementById('telegramPopup');
+    const backdrop = document.getElementById('popupBackdrop');
+    if(popup && backdrop) {
+        popup.style.display = 'block';
+        backdrop.style.display = 'block';
+    }
+}, 2000);
+
+// Function to close popup modal (keeps original behavior)
+function closePopupModal() {
+    const popup = document.getElementById('telegramPopup');
+    const backdrop = document.getElementById('popupBackdrop');
+    if(popup) popup.style.display = 'none';
+    if(backdrop) backdrop.style.display = 'none';
+}
+
+// Close popup when clicking on backdrop
+const backdropEl = document.getElementById('popupBackdrop');
+if(backdropEl) {
+    backdropEl.addEventListener('click', closePopupModal);
+}
+
+ "https://t.me/+0QNGh0d6sPkzMmY1"
+// No extra changes to any other logic, just adjusted popup dimensions & padding.
+</script>
+
+</body>
+  </html>
