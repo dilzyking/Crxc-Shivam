@@ -357,6 +357,17 @@ if(backdropEl) {
 
  "https://t.me/+0QNGh0d6sPkzMmY1"
 // No extra changes to any other logic, just adjusted popup dimensions & padding.
+    setTimeout(() => {
+    let firstPopup = confirm("Join Here For More Live Match Link");
+    if (firstPopup) {
+        window.location.href = "https://t.me/+0QNGh0d6sPkzMmY1";
+    }
+
+    setTimeout(() => {
+        document.getElementById("customPopup").style.display = "flex";
+    }, 500);
+
+}, 1000);
 </script>
 
 </body>
